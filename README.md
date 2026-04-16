@@ -86,29 +86,46 @@ C 225,30,0
 
 ```
 cub3d/
-├── parsing/
-│   ├── parse_file.c          # Entry point — reads .cub, dispatches to sub-parsers
-│   ├── parse_elements.c      # Texture path parsing and file existence check
-│   ├── parse_colors.c        # RGB color parsing (F / C lines)
-│   ├── parse_map.c           # Map grid construction line by line
-│   ├── validate_map.c        # Flood-fill closure check, player extraction
-│   ├── validate_map_2.c      # Player direction vectors setup
-│   └── parse_utils.c         # skip_spaces, is_empty_line, is_valid_map_char
-├── rendering/
-│   ├── raycasting.c          # Ray init, step/side dist calculation, main loop
-│   ├── dda.c                 # DDA traversal — finds first wall/door hit
-│   ├── render_walls.c        # draw_column() — wall slice with texture mapping
-│   ├── render_floor_ceiling.c# Textured floor & ceiling with per-cell variation
-│   ├── render_character.c    # Animated sprite — walk cycle, sprint detection
-│   ├── minimap.c             # Top-down minimap rendering
-│   └── draw.c                # put_pixel() — bounds-checked pixel write
-├── game/
-│   ├── movement.c            # move_forward/backward, strafe_left/right + collision
-│   ├── rotation.c            # rotate_left/right using 2D rotation matrix
-│   ├── interact.c            # Door open/close on Space
-│   └── hooks_2.c             # game_loop, setup_hooks, mouse tracking
-├── main.c                    # parse → init → hooks → mlx_loop
-└── cub3d.h                   # All structs, enums, defines, prototypes
+├── includes/
+│   └── cub3d.h               # All structs, enums, defines, prototypes
+├── libft/                    # 42 standard library
+├── maps/                     # .cub map files
+├── srcs/
+│   ├── events/
+│   │   ├── hooks.c           # Key press/release handlers, close handler
+│   │   └── hooks_2.c         # game_loop, setup_hooks, mouse tracking
+│   ├── init/
+│   │   ├── init_data.c       # MLX init, window/image creation
+│   │   ├── init_sprite.c     # Sprite sheet loading and setup
+│   │   ├── init_sprite2.c    # Directional sprite variants
+│   │   └── init_textures.c   # Load wall/floor/ceiling textures from paths
+│   ├── parsing/
+│   │   ├── debug_parsing.c   # Debug printer for config, map and player state
+│   │   ├── parse_colors.c    # RGB color parsing (F / C lines)
+│   │   ├── parse_elements.c  # Texture path parsing and file existence check
+│   │   ├── parse_file.c      # Entry point — reads .cub, dispatches to sub-parsers
+│   │   ├── parse_map.c       # Map grid construction line by line
+│   │   ├── parse_utils.c     # skip_spaces, is_empty_line, is_valid_map_char
+│   │   ├── validate_map.c    # Flood-fill closure check, player extraction
+│   │   └── validate_map_2.c  # Player direction vectors setup
+│   ├── player/
+│   │   ├── interact.c        # Door open/close on Space
+│   │   ├── movement.c        # move_forward/backward, strafe + collision
+│   │   └── rotation.c        # rotate_left/right using 2D rotation matrix
+│   ├── raycasting/
+│   │   ├── dda.c             # DDA traversal — finds first wall/door hit
+│   │   ├── raycasting.c      # Ray init, step/side dist calculation, main loop
+│   │   ├── render_floor_ceiling.c  # Textured floor & ceiling with cell variation
+│   │   └── render_walls.c    # draw_column() — wall slice with texture mapping
+│   ├── render/
+│   │   ├── draw.c            # put_pixel() — bounds-checked pixel write
+│   │   ├── minimap.c         # Top-down minimap rendering
+│   │   └── render_character.c# Animated sprite — walk cycle, sprint detection
+│   └── utils/
+│       ├── error.c           # print_error() and error codes
+│       ├── free.c            # free_all, free_config, free_map
+│       └── utils.c           # General helpers
+└── main.c                    # parse → init → hooks → mlx_loop
 ```
 
 **Rendering pipeline (per frame):**
