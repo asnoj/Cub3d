@@ -1,0 +1,149 @@
+# mlx.supp
+
+{
+   mlx_xshm_image
+   Memcheck:Leak
+   ...
+   fun:mlx_int_new_xshm_image
+   ...
+}
+{
+   mlx_xshm_create
+   Memcheck:Leak
+   ...
+   fun:XShmCreateImage
+   ...
+}
+{
+   x11_open_display
+   Memcheck:Leak
+   ...
+   fun:XOpenDisplay
+   ...
+}
+{
+   x11_get_default
+   Memcheck:Leak
+   ...
+   fun:XGetDefault
+   ...
+}
+{
+   x11_create_gc
+   Memcheck:Leak
+   ...
+   fun:XCreateGC
+   ...
+}
+{
+   x11_create_pixmap
+   Memcheck:Leak
+   ...
+   fun:XCreatePixmap
+   ...
+}
+{
+   x11_create_bitmap
+   Memcheck:Leak
+   ...
+   fun:XCreateBitmapFromData
+   ...
+}
+{
+   xcb_connect
+   Memcheck:Leak
+   ...
+   fun:xcb_connect_to_fd
+   ...
+}
+{
+   xcb_connect_display
+   Memcheck:Leak
+   ...
+   fun:xcb_connect_to_display_with_auth_info
+   ...
+}
+{
+   xcb_extension
+   Memcheck:Leak
+   ...
+   fun:xcb_get_extension_data
+   ...
+}
+{
+   xlc_create
+   Memcheck:Leak
+   ...
+   fun:_XlcCreateLC
+   ...
+}
+{
+   xlc_open
+   Memcheck:Leak
+   ...
+   fun:_XOpenLC
+   ...
+}
+{
+   xlc_default_loader
+   Memcheck:Leak
+   ...
+   fun:_XlcDefaultLoader
+   ...
+}
+{
+   xlc_utf8_loader
+   Memcheck:Leak
+   ...
+   fun:_XlcUtf8Loader
+   ...
+}
+{
+   xrm_init
+   Memcheck:Leak
+   ...
+   fun:XrmInitialize
+   ...
+}
+{
+   xkb_use_extension
+   Memcheck:Leak
+   ...
+   fun:XkbUseExtension
+   ...
+}
+{
+   xcursor_display
+   Memcheck:Leak
+   ...
+   fun:_XcursorGetDisplayInfo
+   ...
+}
+{
+   xcursor_argb
+   Memcheck:Leak
+   ...
+   fun:XcursorSupportsARGB
+   ...
+}
+{
+   mlx_mouse_hide
+   Memcheck:Leak
+   ...
+   fun:mlx_mouse_hide
+   ...
+}
+{
+   dl_open
+   Memcheck:Leak
+   ...
+   fun:_dl_open
+   ...
+}
+{
+   dl_map_object
+   Memcheck:Leak
+   ...
+   fun:_dl_map_object
+   ...
+}
