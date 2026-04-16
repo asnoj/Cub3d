@@ -1,78 +1,59 @@
-*This project has been created as part of the 42 curriculum by jcrochet, aronnet.*
+*This project has been created as part of the 42 curriculum by aronnet & jcrochet.*
 
-# cub3D
+<div align="center">
 
-A 3D game engine built from scratch in C using raycasting, inspired by the legendary Wolfenstein 3D (1992). Navigate through a maze in first-person perspective with textured walls, interactive doors, and animated sprites.
+<h1>🎮 CUB3D</h1>
 
-## Description
+**A raycasting 3D game engine inspired by Wolfenstein 3D — written in C**
 
-cub3D is a graphics project that renders a pseudo-3D environment from a 2D map using the raycasting technique popularized by id Software. The engine reads a `.cub` scene file that defines wall textures, floor/ceiling colors, and a maze layout, then renders the scene in real-time with player movement and rotation.
+[![42 School](https://img.shields.io/badge/42-School-000000?style=flat-square&logo=42)](https://42lehavre.fr)
+[![Language](https://img.shields.io/badge/Language-C-blue?style=flat-square&logo=c)](https://en.wikipedia.org/wiki/C_(programming_language))
+[![Norm](https://img.shields.io/badge/Norm-v3-brightgreen?style=flat-square)](https://github.com/42School/norminette)
 
-The project covers parsing and validation of scene files, mathematical foundations of raycasting (DDA algorithm, perpendicular distance correction), texture mapping on walls and floor/ceiling, and real-time keyboard and mouse input handling.
+</div>
 
-### Features
+---
 
-**Mandatory:**
-- Raycasting engine with textured walls (North, South, East, West)
-- Configurable floor and ceiling colors
-- Player movement (WASD) and rotation (arrow keys)
-- Scene file parsing with comprehensive error handling
-- Map validation (flood fill to ensure closed walls)
+## 📖 Description
 
-**Bonus:**
-- Wall collision detection with sliding
-- Interactive minimap overlay
-- Doors that open and close (press Space)
-- Animated player sprite with directional frames
-- Mouse-controlled camera rotation
-- Textured floor and ceiling with multiple randomized ceiling textures
+**cub3D** is a 42 School project that implements a first-person 3D engine from scratch using raycasting — the same technique used in Wolfenstein 3D (1992). A 2D map is rendered in real time as a pseudo-3D perspective using MiniLibX.
 
-## Instructions
+The project was built in pair programming and covers computer graphics fundamentals: ray-wall intersection, texture mapping, camera projection, and pixel-level rendering.
 
-### Prerequisites
+---
 
-- Linux (tested on Ubuntu 24)
-- GCC / cc
-- Make
-- X11 development libraries (`libx11-dev`, `libxext-dev`)
+## ✨ Features
 
-### Compilation
+### Mandatory
+- Real-time raycasting with the **DDA algorithm**
+- **4 directional wall textures** (NO / SO / WE / EA), each mapped correctly per face
+- Configurable **floor and ceiling colors** via `.cub` file
+- Smooth **WASD movement** with collision detection
+- **Left/Right arrow** camera rotation
+- Clean `.cub` map parsing with full error handling
 
-```bash
-make        # compile the project
-make clean  # remove object files
-make fclean # remove object files and binary
-make re     # recompile from scratch
-make bonus  # compile with bonus features
-```
+### Bonus
+- 🗺️ **Minimap** — top-down view rendered in the corner, showing walls, floors and player position
+- 🚪 **Doors** — interactive `D` tiles openable/closable with `Space`
+- 🖱️ **Mouse look** — camera follows mouse movement, locked to window center
+- 🎨 **Textured floor & ceiling** — per-cell texture variation using hash-based index selection
+- 🧍 **Animated character sprite** — directional walk cycle with separate sprint animation
 
-### Execution
+---
 
-```bash
-./cub3D <path_to_map.cub>
-```
+## 🕹️ Controls
 
-Example:
-```bash
-./cub3D maps/maps.cub
-```
-
-### Controls
-
-| Key | Action |
+| Input | Action |
 |---|---|
-| W | Move forward |
-| A | Strafe left |
-| S | Move backward |
-| D | Strafe right |
-| ← → | Rotate camera |
-| Mouse | Rotate camera (bonus) |
-| Space | Open/close doors (bonus) |
-| ESC | Quit |
+| `W` `A` `S` `D` | Move forward / strafe left / backward / strafe right |
+| `←` `→` | Rotate camera left / right |
+| `Mouse` | Rotate camera (continuous tracking) |
+| `Space` | Open / close door in front of player |
+| `ESC` | Quit |
 
-### Map format (.cub)
+---
 
-A `.cub` file contains texture paths, colors, and a map grid:
+## 🗺️ Map format (`.cub`)
 
 ```
 NO ./textures/north.xpm
@@ -85,26 +66,126 @@ C 225,30,0
 
 111111
 100101
-101001
-1100N1
+1D0N01
+110001
 111111
 ```
 
-Map characters: `1` = wall, `0` = empty space, `N/S/E/W` = player spawn and orientation, `D` = door (bonus).
+| Character | Meaning |
+|---|---|
+| `1` | Wall |
+| `0` | Empty floor |
+| `N` `S` `E` `W` | Player spawn + initial direction |
+| `D` | Door (interactive, bonus) |
 
-## Resources
+**Validation rules:** the map must be fully enclosed by walls, contain exactly one player spawn, and use only valid characters. A flood-fill algorithm verifies closure from the spawn point.
 
-- [Lodev Raycasting Tutorial](https://lodev.org/cgtutor/raycasting.html) — Primary reference for the raycasting algorithm, DDA implementation, and texture mapping math.
-- [42 Docs — miniLibX](https://harm-smits.github.io/42docs/libs/minilibx) — Documentation for the miniLibX graphics library.
-- [Wolfenstein 3D](http://users.atw.hu/wolf3d/) — The original game that inspired this project, useful for understanding the expected rendering behavior.
+---
 
-### AI usage
+## 🏗️ Architecture
 
-AI tools (Claude) were used during development for the following tasks:
-- Understanding the mathematical concepts behind raycasting (DDA algorithm, perpendicular distance correction, texture coordinate calculation).
-- Structuring the project architecture (file organization, data structures, function prototypes).
-- Debugging memory leaks and segmentation faults using valgrind output analysis.
-- Converting image files to .xpm format compatible with miniLibX.
-- Writing valgrind suppression files for X11/miniLibX internal leaks.
+```
+cub3d/
+├── parsing/
+│   ├── parse_file.c          # Entry point — reads .cub, dispatches to sub-parsers
+│   ├── parse_elements.c      # Texture path parsing and file existence check
+│   ├── parse_colors.c        # RGB color parsing (F / C lines)
+│   ├── parse_map.c           # Map grid construction line by line
+│   ├── validate_map.c        # Flood-fill closure check, player extraction
+│   ├── validate_map_2.c      # Player direction vectors setup
+│   └── parse_utils.c         # skip_spaces, is_empty_line, is_valid_map_char
+├── rendering/
+│   ├── raycasting.c          # Ray init, step/side dist calculation, main loop
+│   ├── dda.c                 # DDA traversal — finds first wall/door hit
+│   ├── render_walls.c        # draw_column() — wall slice with texture mapping
+│   ├── render_floor_ceiling.c# Textured floor & ceiling with per-cell variation
+│   ├── render_character.c    # Animated sprite — walk cycle, sprint detection
+│   ├── minimap.c             # Top-down minimap rendering
+│   └── draw.c                # put_pixel() — bounds-checked pixel write
+├── game/
+│   ├── movement.c            # move_forward/backward, strafe_left/right + collision
+│   ├── rotation.c            # rotate_left/right using 2D rotation matrix
+│   ├── interact.c            # Door open/close on Space
+│   └── hooks_2.c             # game_loop, setup_hooks, mouse tracking
+├── main.c                    # parse → init → hooks → mlx_loop
+└── cub3d.h                   # All structs, enums, defines, prototypes
+```
 
-All AI-generated code was reviewed, understood, and adapted by the team before integration. The bonus features (minimap, doors, mouse rotation, sprite animation) were implemented independently using only conceptual explanations from AI, without receiving code.
+**Rendering pipeline (per frame):**
+
+```
+mlx_loop_hook
+     │
+     ▼
+render_floor_ceiling()   ← textured floor & ceiling rows
+     │
+     ▼
+perform_raycasting()     ← for each column x:
+     │                      init_ray → calculate_step → DDA → draw_column
+     ▼
+draw_minimap()           ← overlay top-down map
+     │
+     ▼
+character_rander_loop()  ← animated sprite overlay (bottom-right)
+     │
+     ▼
+mlx_put_image_to_window()
+```
+
+---
+
+## 🧮 Technical Highlights
+
+**DDA (Digital Differential Analysis)** — rather than checking every point along a ray, the DDA algorithm jumps directly from grid line to grid line, making each ray-cast O(map_size) instead of O(resolution). Side distances are precomputed and incremented, with the shorter one selected each step.
+
+**Perpendicular wall distance** — to avoid the fisheye distortion that comes from using Euclidean distance, the projected wall height is computed from `perp_wall_dist` — the distance to the wall plane perpendicular to the camera direction, not to the player position.
+
+**Camera plane** — the FOV is represented as a 2D vector perpendicular to the direction vector, with length 0.66 (≈66° FOV). Rotation applies a 2D matrix to both `dir` and `plane` simultaneously, preserving their perpendicularity.
+
+**Textured floor/ceiling** — the floor is cast by projecting each screen row back into world space using the inverse of the projection formula. Per-cell texture variation is achieved with a hash `(cell_x * 7 + cell_y * 13) % NB_CEIL_TEX`, giving deterministic but varied ceiling patterns without any overhead.
+
+**Mouse lock** — mouse events move the camera via `camera_track`, then `mlx_mouse_move` recenters the cursor to `WIN_WIDTH/2` every frame. This creates infinite-rotation mouse look without the cursor ever reaching the screen edge.
+
+**Flood-fill map validation** — a copy of the map grid is flood-filled from the player's spawn. If the fill reaches any out-of-bounds coordinate or a space character, the map is considered open and rejected. This correctly catches non-rectangular maps with irregular borders.
+
+---
+
+## 🔧 Instructions
+
+**Prerequisites:** `gcc`, `make`, MiniLibX, X11 dev libraries
+
+```bash
+# Ubuntu / Debian
+sudo apt-get install libx11-dev libxext-dev libbsd-dev
+
+git clone https://github.com/<your-username>/cub3d.git
+cd cub3d
+make
+
+./cub3d maps/map.cub
+```
+
+```bash
+make clean    # Remove object files
+make fclean   # Remove objects + binary
+make re       # Full rebuild
+```
+
+---
+
+## 📚 Resources
+
+- [Lode's raycasting tutorial](https://lodev.org/cgtutor/raycasting.html) — the reference implementation
+- [DDA algorithm — Wikipedia](https://en.wikipedia.org/wiki/Digital_differential_analyzer_(graphics_algorithm))
+- [Wolfenstein 3D engine overview](https://en.wikipedia.org/wiki/Wolfenstein_3D)
+- [MiniLibX documentation](https://harm-smits.github.io/42docs/libs/minilibx)
+
+**AI usage:** AI was used exclusively for README writing and formatting. All source code was written manually without AI assistance, in compliance with the 42 AI policy for foundational projects.
+
+---
+
+<div align="center">
+
+Made with ☕ at [42 Le Havre](https://42lehavre.fr) — **aronnet & jcrochet**
+
+</div>
