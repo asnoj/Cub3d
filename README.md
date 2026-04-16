@@ -87,7 +87,8 @@ C 225,30,0
 ```
 cub3d/
 ├── includes/
-│   └── cub3d.h               # All structs, enums, defines, prototypes
+│   ├── cub3d.h               # All structs, enums and prototypes
+│   └── defines.h             # Constants, keycodes, error messages, game settings
 ├── libft/                    # 42 standard library
 ├── maps/                     # .cub map files
 ├── srcs/
